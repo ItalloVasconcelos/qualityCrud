@@ -9,4 +9,3 @@ async function get() {
 export const todoController = {
     get,
 };
- console.log("TEstando")
