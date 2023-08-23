@@ -5,15 +5,21 @@ import { todoController } from "@ui/controller/todo";
 type HomeTodo = {
     id: string;
     content: string;
-}
+};
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
+    const [page, setPage] = useState(1)<number>;
+    const [totalPages, setTotalPages] = useState(0)<number>;
     const [todos, setTodos] = useState<HomeTodo[]>([]);
+    const hasMorePages = totalPages > page;
     useEffect(() => {
-        todoController.get().then((todos) => {
-            setTodos(todos)
-        })
-    }, [])
+        todoController.get({ page }).then(({ todos, pages }) => {
+            setTodos((oldTodos) => {
+                return [...oldTodos, ...todos];
+            });
+            setTotalPages(pages);
+        });
+    }, [page]);
 
     return (
         <main>
@@ -62,16 +68,15 @@ function homePage() {
                                         <input type="checkbox" />
                                     </td>
                                     <td>{currentTodo.id.substring(0, 4)}</td>
-                                    <td>
-                                        {currentTodo.content}
-                                    </td>
+                                    <td>{currentTodo.content}</td>
                                     <td align="right">
-                                        <button data-type="delete">Apagar</button>
+                                        <button data-type="delete">
+                                            Apagar
+                                        </button>
                                     </td>
                                 </tr>
-                            )
+                            );
                         })}
-
 
                         <tr>
                             <td
@@ -89,26 +94,31 @@ function homePage() {
                             </td>
                         </tr>
 
-                        <tr>
-                            <td
-                                colSpan={4}
-                                align="center"
-                                style={{ textAlign: "center" }}
-                            >
-                                <button data-type="load-more">
-                                    Carregar mais{" "}
-                                    <span
-                                        style={{
-                                            display: "inline-block",
-                                            marginLeft: "4px",
-                                            fontSize: "1.2em",
-                                        }}
+                        {hasMorePages && (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    align="center"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <button
+                                        data-type="load-more"
+                                        onClick={() => setPage(page + 1)}
                                     >
-                                        ↓
-                                    </span>
-                                </button>
-                            </td>
-                        </tr>
+                                        Página {page} Carregar mais{" "}
+                                        <span
+                                            style={{
+                                                display: "inline-block",
+                                                marginLeft: "4px",
+                                                fontSize: "1.2em",
+                                            }}
+                                        >
+                                            ↓
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </section>
