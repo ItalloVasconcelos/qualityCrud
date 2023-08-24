@@ -8,22 +8,34 @@ type HomeTodo = {
 };
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
+    const [initalLoadComplete, setInitialLoadComplete] = useState(
+        false
+    )<boolean>;
     const [page, setPage] = useState(1)<number>;
     const [totalPages, setTotalPages] = useState(0)<number>;
     const [todos, setTodos] = useState<HomeTodo[]>([]);
     const hasMorePages = totalPages > page;
+    const [isLoading, setIsLoading] = useState(true);
+    const hasNoTodo = todos.length === 0 && !isLoading;
     useEffect(() => {
-        todoController.get({ page }).then(({ todos, pages }) => {
-            setTodos((oldTodos) => {
-                return [...oldTodos, ...todos];
-            });
-            setTotalPages(pages);
-        });
+        setInitialLoadComplete(true);
+        if (!initalLoadComplete) {
+            todoController
+                .get({ page })
+                .then(({ todos, pages }) => {
+                    setTodos(todos);
+                    setTotalPages(pages);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        }
     }, [page]);
 
     return (
         <main>
             <GlobalStyles themeName="red" />
+
             <header
                 style={{
                     backgroundImage: `url('${bg}')`,
@@ -78,21 +90,24 @@ function homePage() {
                             );
                         })}
 
-                        <tr>
-                            <td
-                                colSpan={4}
-                                align="center"
-                                style={{ textAlign: "center" }}
-                            >
-                                Carregando...
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colSpan={4} align="center">
-                                Nenhum item encontrado
-                            </td>
-                        </tr>
+                        {isLoading && (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    align="center"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    Carregando...
+                                </td>
+                            </tr>
+                        )}
+                        {hasNoTodo && (
+                            <tr>
+                                <td colSpan={4} align="center">
+                                    Nenhum item encontrado
+                                </td>
+                            </tr>
+                        )}
 
                         {hasMorePages && (
                             <tr>
@@ -103,7 +118,27 @@ function homePage() {
                                 >
                                     <button
                                         data-type="load-more"
-                                        onClick={() => setPage(page + 1)}
+                                        onClick={() => {
+                                            setIsLoading(true);
+
+                                            const nextPage = page + 1;
+                                            setPage(nextPage);
+
+                                            todoController
+                                                .get({ page: nextPage })
+                                                .then(({ todos, pages }) => {
+                                                    setTodos((oldTodos) => {
+                                                        return [
+                                                            ...oldTodos,
+                                                            ...todos,
+                                                        ];
+                                                    });
+                                                    setTotalPages(pages);
+                                                })
+                                                .finally(() => {
+                                                    setIsLoading(false);
+                                                });
+                                        }}
                                     >
                                         Página {page} Carregar mais{" "}
                                         <span
