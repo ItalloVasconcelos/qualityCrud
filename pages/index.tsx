@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
 import { todoController } from "@ui/controller/todo";
 
@@ -8,9 +8,7 @@ type HomeTodo = {
 };
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
-    const [initalLoadComplete, setInitialLoadComplete] = useState(
-        false
-    )<boolean>;
+    const initialLoadComplete = useRef(false);
     const [page, setPage] = useState(1)<number>;
     const [totalPages, setTotalPages] = useState(0)<number>;
     const [todos, setTodos] = useState<HomeTodo[]>([]);
@@ -23,12 +21,9 @@ function homePage() {
 
     const hasNoTodo = homeTodos.length === 0 && !isLoading;
     const hasMorePages = totalPages > page;
-    // const search = event.target.value;
 
-    // setTodos(filteredTodos);
     useEffect(() => {
-        setInitialLoadComplete(true);
-        if (!initalLoadComplete) {
+        if (!initialLoadComplete.current) {
             todoController
                 .get({ page })
                 .then(({ todos, pages }) => {
@@ -37,6 +32,7 @@ function homePage() {
                 })
                 .finally(() => {
                     setIsLoading(false);
+                    initialLoadComplete.current = true;
                 });
         }
     }, [page]);
