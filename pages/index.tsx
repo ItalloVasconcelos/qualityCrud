@@ -14,9 +14,18 @@ function homePage() {
     const [page, setPage] = useState(1)<number>;
     const [totalPages, setTotalPages] = useState(0)<number>;
     const [todos, setTodos] = useState<HomeTodo[]>([]);
-    const hasMorePages = totalPages > page;
     const [isLoading, setIsLoading] = useState(true);
-    const hasNoTodo = todos.length === 0 && !isLoading;
+    const [search, setSearch] = useState("")<string>;
+    const homeTodos = todoController.filterTodosByContent<HomeTodo>(
+        search,
+        todos
+    );
+
+    const hasNoTodo = homeTodos.length === 0 && !isLoading;
+    const hasMorePages = totalPages > page;
+    // const search = event.target.value;
+
+    // setTodos(filteredTodos);
     useEffect(() => {
         setInitialLoadComplete(true);
         if (!initalLoadComplete) {
@@ -57,6 +66,9 @@ function homePage() {
                     <input
                         type="text"
                         placeholder="Filtrar lista atual, ex: Dentista"
+                        onChange={function handleSearch(event) {
+                            setSearch(event.target.value);
+                        }}
                     />
                 </form>
 
@@ -73,7 +85,7 @@ function homePage() {
                     </thead>
 
                     <tbody>
-                        {todos.map((currentTodo: any) => {
+                        {homeTodos.map((currentTodo: any) => {
                             return (
                                 <tr key={currentTodo.id}>
                                     <td>
