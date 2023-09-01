@@ -13,7 +13,7 @@ type TODO = {
 const DB_FILE_PATH = "./core/db";
 console.log("[CRUD]");
 
-function create(content: string): TODO {
+export function create(content: string): TODO {
     const todo: TODO = {
         id: uuid(),
         date: new Date().toISOString(),

@@ -1,4 +1,4 @@
-import { read } from "@db-crud-todo";
+import { read, create } from "@db-crud-todo";
 type todoRepositoryGetParams = {
     page?: number;
     limit?: number;
@@ -10,7 +10,7 @@ type TodoRepositoryGetOutput = {
     pages: number;
 };
 
-function get({ page, limit }: todoRepositoryGetParams = {}) {
+async function get({ page, limit }: todoRepositoryGetParams = {}) {
     const currentPage = page || 1;
     const currentLimit = limit || 10;
     const ALL_TODOS = read();
@@ -27,8 +27,13 @@ function get({ page, limit }: todoRepositoryGetParams = {}) {
     };
 }
 
+async function createByContent(content: string): Promise<Todo> {
+    const newTodo = create(content);
+    return newTodo;
+}
 export const todoRepository = {
     get,
+    createByContent,
 };
 
 type Todo = {
