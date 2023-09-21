@@ -9,11 +9,12 @@ type HomeTodo = {
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
     const initialLoadComplete = useRef(false);
-    const [page, setPage] = useState(1)<number>;
-    const [totalPages, setTotalPages] = useState(0)<number>;
+    const [newTodoContent, setNewTodoContent] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [todos, setTodos] = useState<HomeTodo[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [search, setSearch] = useState("")<string>;
+    const [search, setSearch] = useState("");
     const homeTodos = todoController.filterTodosByContent<HomeTodo>(
         search,
         todos
@@ -49,8 +50,31 @@ function homePage() {
                 <div className="typewriter">
                     <h1>O que fazer hoje?</h1>
                 </div>
-                <form>
-                    <input type="text" placeholder="Correr, Estudar..." />
+                <form onSubmit={(event) => {
+                    event.preventDefault();
+                    todoController.create({
+                        content: newTodoContent,
+                        onError() {
+                            alert("Você precisa de um conteúdo para criar uma TODO!");
+                        },
+                        onSucess(todo: HomeTodo) {
+                            setTodos((oldTodos) => {
+                                return [
+                                    todo,
+                                    ...oldTodos
+                                ]
+                            });
+                            setNewTodoContent("");
+                        }
+                    });
+                }}>
+                    <input type="text" placeholder="Correr, Estudar..."
+                        value={newTodoContent}
+                        onChange={function newTodoHaandler(event) {
+                            setNewTodoContent(event.target.value)
+
+                        }}
+                    />
                     <button type="submit" aria-label="Adicionar novo item">
                         +
                     </button>
