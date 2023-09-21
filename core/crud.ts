@@ -90,13 +90,3 @@ function deleteById(id: UUID) {
 function clearDb() {
     fs.writeFileSync(DB_FILE_PATH, "");
 }
-// clearDb();
-// create("First To do");
-// const secondTodo = create("Second To do");
-// deleteById(secondTodo.id);
-// const thirdTodo = create("Third To do");
-// // update(TercTodo.id, {
-// //   content: "Atualizada!",
-// // });
-// updateContentById(thirdTodo.id, "Atualizado!");
-// console.log(read());

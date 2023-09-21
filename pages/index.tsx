@@ -5,6 +5,7 @@ import { todoController } from "@ui/controller/todo";
 type HomeTodo = {
     id: string;
     content: string;
+    done: boolean;
 };
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
@@ -105,14 +106,45 @@ function homePage() {
                     </thead>
 
                     <tbody>
-                        {homeTodos.map((currentTodo: any) => {
+                        {homeTodos.map((todo) => {
                             return (
-                                <tr key={currentTodo.id}>
+                                <tr key={todo.id}>
                                     <td>
-                                        <input type="checkbox" />
+                                        <input type="checkbox"
+                                            checked={todo.done}
+                                            onChange={function handleToggle() {
+                                                todoController.toggleDone(
+                                                    {
+                                                        id: todo.id,
+                                                        onError() {
+                                                            alert("Falha ao atualizar a TODO")
+                                                        },
+                                                        updateTodoOnScreen() {
+                                                            //Optimistic Update!
+                                                            setTodos((currentTodos) => {
+                                                                return currentTodos.map((currentTodo) => {
+                                                                    if (currentTodo.id === todo.id) {
+                                                                        return {
+                                                                            ...currentTodo,
+                                                                            done: !currentTodo.done
+                                                                        }
+                                                                    }
+                                                                    return currentTodo
+                                                                })
+                                                            })
+                                                        }
+                                                    })
+
+
+                                            }}
+                                        />
                                     </td>
-                                    <td>{currentTodo.id.substring(0, 4)}</td>
-                                    <td>{currentTodo.content}</td>
+                                    <td>{todo.id.substring(0, 4)}</td>
+
+
+                                    <td>
+                                        {!todo.done && todo.content}
+                                        {todo.done && <s>{todo.content}</s>}</td>
                                     <td align="right">
                                         <button data-type="delete">
                                             Apagar

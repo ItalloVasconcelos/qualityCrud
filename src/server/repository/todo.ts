@@ -10,7 +10,10 @@ type TodoRepositoryGetOutput = {
     pages: number;
 };
 
-async function get({ page, limit }: todoRepositoryGetParams = {}) {
+async function get({
+    page,
+    limit,
+}: todoRepositoryGetParams = {}): Promise<TodoRepositoryGetOutput> {
     const currentPage = page || 1;
     const currentLimit = limit || 10;
     const ALL_TODOS = read().reverse();

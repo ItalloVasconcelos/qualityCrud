@@ -8,14 +8,11 @@ type TodoControllerGetParams = {
 async function get(params: TodoControllerGetParams) {
     return todoRepository.get({
         page: params.page,
-        limit: 1,
+        limit: 5,
     });
 }
 
-function filterTodosByContent<Todo>(
-    search: string,
-    todos: Array<Todo & { content: string }>
-): Todo[] {
+function filterTodosByContent(search: string, todos: Todo[]) {
     const homeTodos = todos.filter((todos) => {
         const searchNormalized = search.toLocaleLowerCase();
         const contentNormalized = todos.content.toLowerCase();
@@ -46,8 +43,25 @@ function create({ content, onError, onSucess }: TodoControllerCreateParams) {
         });
 }
 
+type TodoControllerToggleDoneParams = {
+    id: string;
+    updateTodoOnScreen: () => void;
+    onError: () => void;
+};
+
+function toggleDone({
+    id,
+    updateTodoOnScreen,
+}: TodoControllerToggleDoneParams) {
+    // updateTodoOnScreen();
+    todoRepository.toggleDone(id).then(() => {
+        updateTodoOnScreen();
+    });
+}
+
 export const todoController = {
     get,
     filterTodosByContent,
     create,
+    toggleDone,
 };
