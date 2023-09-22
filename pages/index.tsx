@@ -146,7 +146,21 @@ function homePage() {
                                         {!todo.done && todo.content}
                                         {todo.done && <s>{todo.content}</s>}</td>
                                     <td align="right">
-                                        <button data-type="delete">
+                                        <button data-type="delete"
+                                            onClick={function handleClick() {
+                                                todoController.deleteById(todo.id).then(() => {
+                                                    setTodos((currentTodos) => {
+                                                        return currentTodos.filter((currentTodo) => {
+                                                            return currentTodo.id !== todo.id
+                                                        })
+                                                    })
+                                                }).catch(() => {
+                                                    console.error("Failed to delete")
+                                                })
+
+
+                                            }}
+                                        >
                                             Apagar
                                         </button>
                                     </td>
