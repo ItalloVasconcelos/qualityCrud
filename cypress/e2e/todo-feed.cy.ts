@@ -3,7 +3,7 @@ describe("/ - Todos Feed", () => {
     it("when load, renders the page", () => {
         cy.visit(BASE_URL);
     });
-    it.only("when create a new todo, it must appears in the screen", () => {
+    it("when create a new todo, it must appears in the screen", () => {
         //Isolar teste, para ser limitado apenas ao front.
         cy.intercept("POST", `${BASE_URL}api/todos`, (request) => {
             request.reply({
@@ -20,13 +20,12 @@ describe("/ - Todos Feed", () => {
         }).as("createTodo");
         cy.visit(BASE_URL);
         const inputAddTodo = "input[name='add-todo-input'";
-        
+
         cy.get(inputAddTodo).type("Test Todo");
-        
-        const btnAddTodo =  "[aria-label='Adicionar novo item']";
+
+        const btnAddTodo = "[aria-label='Adicionar novo item']";
 
         cy.get(btnAddTodo).click();
-
 
         cy.get("table > tbody").contains("Test Todo");
     });

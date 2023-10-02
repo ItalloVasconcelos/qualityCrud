@@ -178,11 +178,6 @@ function homePage() {
                                                                 );
                                                             }
                                                         );
-                                                    })
-                                                    .catch(() => {
-                                                        console.error(
-                                                            "Failed to delete"
-                                                        );
                                                     });
                                             }}
                                         >

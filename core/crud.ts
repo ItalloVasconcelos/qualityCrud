@@ -11,7 +11,6 @@ type TODO = {
     done: boolean;
 };
 const DB_FILE_PATH = "./core/db";
-console.log("[CRUD]");
 
 export function create(content: string): TODO {
     const todo: TODO = {
@@ -63,7 +62,7 @@ export function update(id: UUID, partialTodo: Partial<TODO>): TODO {
     return updatedTodo;
 }
 
-function updateContentById(id: UUID, content: string): TODO {
+export function updateContentById(id: UUID, content: string): TODO {
     return update(id, { content });
 }
 
@@ -87,6 +86,6 @@ export function deleteById(id: UUID) {
     );
 }
 
-function clearDb() {
+export function clearDb() {
     fs.writeFileSync(DB_FILE_PATH, "");
 }
