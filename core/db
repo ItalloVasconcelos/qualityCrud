@@ -53,24 +53,8 @@
       "date": "2023-09-21T22:19:53.562Z",
       "content": "adasd",
       "done": true
-    },
-    {
-      "id": "730ff4f0-0547-4fed-9a26-82c8d90fbdc8",
-      "date": "2023-09-21T22:19:54.364Z",
-      "content": "adasd",
-      "done": false
-    },
-    {
-      "id": "0536cab6-ff88-4a3f-b944-e0bafbe3b684",
-      "date": "2023-09-21T22:19:55.221Z",
-      "content": "adasd",
-      "done": true
-    },
-    {
-      "id": "b79c8c6c-2e13-4dc0-98aa-80a7f9f887c6",
-      "date": "2023-09-21T22:19:56.071Z",
-      "content": "asdasd",
-      "done": false
     }
-  ]
+    
+  ],
+  "dogs": []
 }
