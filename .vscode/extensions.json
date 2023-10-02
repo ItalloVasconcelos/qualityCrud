@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "EditorConfig.EditorConfig",
+        "github.vscode-github-actions"
         
     ]
 }
