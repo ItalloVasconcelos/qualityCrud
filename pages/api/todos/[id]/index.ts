@@ -1,12 +1,12 @@
 import { todoController } from "@server/controller/todo";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handle(
+export default async function handle(
     request: NextApiRequest,
     response: NextApiResponse
 ) {
     if (request.method === "DELETE") {
-        todoController.deleteById(request, response);
+        await todoController.deleteById(request, response);
         return;
     }
 

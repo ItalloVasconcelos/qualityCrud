@@ -4,7 +4,7 @@
     "description": "Create a CRUD with quality",
     "main": "index.js",
     "scripts": {
-        "start": "npx ts-node ./core/crud.ts",     
+        "start": "npx ts-node ./core/crud.ts",
         "dev": "next dev",
         "build": "next build",
         "startNext": "next start",
@@ -40,6 +40,7 @@
         "uuid": "^9.0.0"
     },
     "dependencies": {
+        "@supabase/supabase-js": "^2.37.0",
         "next": "^13.3.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
