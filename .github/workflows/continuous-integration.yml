@@ -25,4 +25,4 @@ jobs:
             - name: "Install dependecies"
               run: "npm install"
             - name: "Test - Cypress"
-              run: "npm run cy:open"
+              run: "npm run test"
