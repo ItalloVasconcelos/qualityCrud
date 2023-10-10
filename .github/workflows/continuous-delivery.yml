@@ -18,4 +18,4 @@ jobs:
             - name: "Install Dependecies"
               run: "npm install"
             - name: "Lint"
-              run: "npx vercel --prod --token=86CrvP84Vv43xBnxEkDC01q6"
+              run: "npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}"
