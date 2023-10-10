@@ -3,6 +3,10 @@ name: "[CD] Continuous Delivery"
 on:
     pull_request:
         types: [opened, synchronize]
+env: 
+    VERCEL_TOKEN: 86CrvP84Vv43xBnxEkDC01q6
+    VERCEL_ORG_ID: team_F3vI9A3Wf18BuhcEunF5ytdG
+    VERCEL_PROJECT_ID: prj_diUnFj0p0gk5Qzfg6ce9eQhuAEK3
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -14,5 +18,5 @@ jobs:
               run: "ls -la"
             - name: "Install Dependecies"
               run: "npm install"
-            - name: "Lint"
+            - name: "Deploy"
               run: "npx vercel --prod"
