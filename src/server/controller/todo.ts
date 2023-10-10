@@ -2,7 +2,6 @@ import { todoRepository } from "@server/repository/todo";
 import { z as schema } from "zod";
 import { NextApiRequest, NextApiResponse } from "next";
 import { HttpNotFoundError } from "@server/infra/errors";
-import toggleDone from "pages/api/todos/[id]/toggle-done";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
     const query = req.query;
@@ -65,32 +64,32 @@ async function create(req: NextApiRequest, res: NextApiResponse) {
             },
         });
     }
+}
 
-    async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
-        const todoId = req.query.id;
+async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
+    const todoId = req.query.id;
 
-        if (!todoId || typeof todoId !== "string") {
-            res.status(400).json({
+    if (!todoId || typeof todoId !== "string") {
+        res.status(400).json({
+            error: {
+                message: "You must to provide a string ID",
+            },
+        });
+        return;
+    }
+
+    try {
+        const updatedTodo = await todoRepository.toggleDone(todoId);
+        res.status(200).json({
+            todo: updatedTodo,
+        });
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(404).json({
                 error: {
-                    message: "You must to provide a string ID",
+                    message: err.message,
                 },
             });
-            return;
-        }
-
-        try {
-            const updatedTodo = await todoRepository.toggleDone(todoId);
-            res.status(200).json({
-                todo: updatedTodo,
-            });
-        } catch (err) {
-            if (err instanceof Error) {
-                res.status(404).json({
-                    error: {
-                        message: err.message,
-                    },
-                });
-            }
         }
     }
 }
