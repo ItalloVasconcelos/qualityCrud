@@ -4,8 +4,8 @@ on:
     pull_request:
         types: [opened, synchronize]
 env:
-VERCEL_ORG_ID: team_F3vI9A3Wf18BuhcEunF5ytdG
-VERCEL_PROJECT_ID: prj_diUnFj0p0gk5Qzfg6ce9eQhuAEK3
+VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -18,4 +18,4 @@ jobs:
             - name: "Install Dependecies"
               run: "npm install"
             - name: "Lint"
-              run: "npx vercel --prod --token=86CrvP84Vv43xBnxEkDC01q6"
+              run: "npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}"
