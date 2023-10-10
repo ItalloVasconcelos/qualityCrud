@@ -6,7 +6,7 @@ type TodoRepositoryGetParams = {
 };
 type TodoRepositoryGetOutput = {
     todos: Todo[];
-    totalTodos: number;
+    total: number;
     pages: number;
 };
 function get({
@@ -55,24 +55,50 @@ export async function createByContent(content: string): Promise<Todo> {
     throw new Error("Failed to create TODO ");
 }
 async function toggleDone(todoId: string): Promise<Todo> {
-    const response = await fetch(`/api/todos/${todoId}/toggle-done`, {
-        method: "PUT",
-    });
-    if (response.ok) {
-        const serverResponse = await response.json();
-        const serverResponseSchema = schema.object({
-            todo: TodoSchema,
+    try {
+        const response = await fetch(`/api/todos/${todoId}/toggle-done`, {
+            method: "PUT",
         });
-        const serverResponseParsed =
-            serverResponseSchema.safeParse(serverResponse);
-        if (!serverResponseParsed.success) {
-            throw new Error(`Failed to update TODO with id ${todoId}`);
+
+        if (response.ok) {
+            const serverResponse = await response.json();
+            const serverResponseSchema = schema.object({
+                todo: TodoSchema,
+            });
+            const serverResponseParsed =
+                serverResponseSchema.safeParse(serverResponse);
+            if (!serverResponseParsed.success) {
+                throw new Error(`Failed to update TODO with id ${todoId}`);
+            }
+            const updatedTodo = serverResponseParsed.data.todo;
+            return updatedTodo;
+        } else {
+            throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
-        const updatedTodo = serverResponseParsed.data.todo;
-        return updatedTodo;
+    } catch (error) {
+        throw new Error(`Server Error!`);
     }
-    throw new Error(`Server Error!`);
 }
+
+// async function toggleDone(todoId: string): Promise<Todo> {
+//     const response = await fetch(`/api/todos/${todoId}/toggle-done`, {
+//         method: "PUT",
+//     });
+//     if (response.ok) {
+//         const serverResponse = await response.json();
+//         const serverResponseSchema = schema.object({
+//             todo: TodoSchema,
+//         });
+//         const serverResponseParsed =
+//             serverResponseSchema.safeParse(serverResponse);
+//         if (!serverResponseParsed.success) {
+//             throw new Error(`Failed to update TODO with id ${todoId}`);
+//         }
+//         const updatedTodo = serverResponseParsed.data.todo;
+//         return updatedTodo;
+//     }
+//     // throw new Error(`Server Error!`);
+// }
 async function deleteById(id: string) {
     const response = await fetch(`api/todos/${id}`, {
         method: "DELETE",

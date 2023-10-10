@@ -5,8 +5,10 @@ import { todoController } from "@ui/controller/todo";
 type HomeTodo = {
     id: string;
     content: string;
+    date: string;
     done: boolean;
 };
+
 const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
 function homePage() {
     const initialLoadComplete = useRef(false);
@@ -16,10 +18,7 @@ function homePage() {
     const [todos, setTodos] = useState<HomeTodo[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const homeTodos = todoController.filterTodosByContent<HomeTodo>(
-        search,
-        todos
-    );
+    const homeTodos = todoController.filterTodosByContent(search, todos);
 
     const hasNoTodo = homeTodos.length === 0 && !isLoading;
     const hasMorePages = totalPages > page;

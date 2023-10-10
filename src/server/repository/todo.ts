@@ -1,9 +1,3 @@
-import {
-    read,
-    create,
-    update,
-    deleteById as dbDeleteById,
-} from "@db-crud-todo";
 import { HttpNotFoundError } from "@server/infra/errors";
 import { Todo, TodoSchema } from "@server/schema/todo";
 // Supabase config
@@ -39,6 +33,7 @@ async function get({
     const { data, error, count } = await supabase
         .from("todos")
         .select("*", { count: "exact" })
+        .order("date", { ascending: false })
         .range(startIndex, endIndex);
 
     if (error) throw new Error("Failed to fetch data");
@@ -59,25 +54,71 @@ async function get({
 }
 
 async function createByContent(content: string): Promise<Todo> {
-    const newTodo = create(content);
-    return newTodo;
+    const { data, error } = await supabase
+        .from("todos")
+        .insert([
+            {
+                content,
+            },
+        ])
+        .select()
+        .single();
+
+    if (error) throw new Error("Failed to create To Do");
+    const parsedData = TodoSchema.parse(data);
+
+    return parsedData;
+
+    // const newTodo = create(content);
+    // return newTodo;
+}
+
+async function getTodoById(id: string): Promise<Todo> {
+    const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error) throw new Error("Failed to get todo by id");
+
+    const parsedData = TodoSchema.safeParse(data);
+    if (!parsedData.success) throw new Error("Failed to Parse Todo created");
+    return parsedData.data;
 }
 async function toggleDone(id: string): Promise<Todo> {
-    const ALL_TODOS = read();
-    const todo = ALL_TODOS.find((todo) => todo.id === id);
+    const todo = await getTodoById(id);
+    const { data, error } = await supabase
+        .from("todos")
+        .update({
+            done: !todo.done,
+        })
+        .eq("id", id)
+        .select()
+        .single();
 
-    if (!todo) throw new Error(`Todo with id "${id}" not found `);
-    const updatedTodo = update(todo.id, {
-        done: !todo.done,
-    });
-    return updatedTodo;
+    if (error) throw new Error("Failed to get todo by id");
+    const parsedData = TodoSchema.parse(data);
+    return parsedData;
+
+    // const ALL_TODOS = read();
+    // const todo = ALL_TODOS.find((todo) => todo.id === id);
+    // if (!todo) throw new Error(`Todo with id "${id}" not found `);
+    // const updatedTodo = update(todo.id, {
+    //     done: !todo.done,
+    // });
+    // return updatedTodo;
 }
 
 async function deleteById(id: string) {
-    const ALL_TODOS = read();
-    const todo = ALL_TODOS.find((todo) => todo.id === id);
-    if (!todo) throw new HttpNotFoundError(`Todo with id "${id}" not found`);
-    dbDeleteById(id);
+    const { error } = await supabase.from("todos").delete().match({
+        id,
+    });
+    if (error) throw new HttpNotFoundError(`Todo with id "${id}" not found`);
+    // const ALL_TODOS = read();
+    // const todo = ALL_TODOS.find((todo) => todo.id === id);
+    // if (!todo) throw new HttpNotFoundError(`Todo with id "${id}" not found`);
+    // dbDeleteById(id);
 }
 export const todoRepository = {
     get,
@@ -85,3 +126,9 @@ export const todoRepository = {
     toggleDone,
     deleteById,
 };
+//import {
+//     read,
+//     create,
+//     update,
+//     deleteById as dbDeleteById,
+// } from "@db-crud-todo";
