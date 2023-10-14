@@ -24,11 +24,11 @@ function filterTodosByContent(search: string, todos: Todo[]) {
 type TodoControllerCreateParams = {
     content?: string;
     onError: () => void;
-    onSucess: (todo: Todo) => void;
+    onSuccess: (todo: Todo) => void;
 };
 
-function create({ content, onError, onSucess }: TodoControllerCreateParams) {
-    const parsedParams = schema.string().safeParse(content);
+function create({ content, onError, onSuccess }: TodoControllerCreateParams) {
+    const parsedParams = schema.string().min(1).safeParse(content);
     if (!parsedParams.success) {
         onError();
         return;
@@ -36,9 +36,13 @@ function create({ content, onError, onSucess }: TodoControllerCreateParams) {
     todoRepository
         .createByContent(parsedParams.data)
         .then((newTodo) => {
-            onSucess(newTodo);
+            onSuccess(newTodo);
         })
         .catch(() => {
+            if (!content || content.trim() === "") {
+                onError();
+                return;
+            }
             onError();
         });
 }

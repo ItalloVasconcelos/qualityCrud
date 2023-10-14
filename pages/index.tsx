@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
 import { todoController } from "@ui/controller/todo";
+import { formatTodoDate } from "@ui/schema/todo";
 
 type HomeTodo = {
     id: string;
@@ -37,7 +38,6 @@ function homePage() {
                 });
         }
     }, [page]);
-
     return (
         <main>
             <GlobalStyles themeName="red" />
@@ -60,7 +60,7 @@ function homePage() {
                                     "Você precisa de um conteúdo para criar uma TODO!"
                                 );
                             },
-                            onSucess(todo: HomeTodo) {
+                            onSuccess(todo: HomeTodo) {
                                 setTodos((oldTodos) => {
                                     return [todo, ...oldTodos];
                                 });
@@ -102,13 +102,15 @@ function homePage() {
                                 <input type="checkbox" disabled />
                             </th>
                             <th align="left">Id</th>
-                            <th align="left">Conteúdo</th>
+                            <th align="left">Data</th>
+                            <th align="center">Conteúdo</th>
                             <th />
                         </tr>
                     </thead>
 
                     <tbody>
                         {homeTodos.map((todo) => {
+                            const formattedDate = formatTodoDate(todo);
                             return (
                                 <tr key={todo.id}>
                                     <td>
@@ -151,11 +153,14 @@ function homePage() {
                                         />
                                     </td>
                                     <td>{todo.id.substring(0, 4)}</td>
-
-                                    <td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {formattedDate}
+                                    </td>
+                                    <td align="center">
                                         {!todo.done && todo.content}
                                         {todo.done && <s>{todo.content}</s>}
                                     </td>
+
                                     <td align="right">
                                         <button
                                             data-type="delete"
@@ -190,7 +195,7 @@ function homePage() {
                         {isLoading && (
                             <tr>
                                 <td
-                                    colSpan={4}
+                                    colSpan={5}
                                     align="center"
                                     style={{ textAlign: "center" }}
                                 >
@@ -200,7 +205,7 @@ function homePage() {
                         )}
                         {hasNoTodo && (
                             <tr>
-                                <td colSpan={4} align="center">
+                                <td colSpan={5} align="center">
                                     Nenhum item encontrado
                                 </td>
                             </tr>
@@ -209,7 +214,7 @@ function homePage() {
                         {hasMorePages && (
                             <tr>
                                 <td
-                                    colSpan={4}
+                                    colSpan={5}
                                     align="center"
                                     style={{ textAlign: "center" }}
                                 >

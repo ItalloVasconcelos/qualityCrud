@@ -1,11 +1,11 @@
-const BASE_URL = "http://localhost:3000/";
+const BASE_URL = "http://localhost:3000";
 describe("/ - Todos Feed", () => {
     it("when load, renders the page", () => {
         cy.visit(BASE_URL);
     });
     it("when create a new todo, it must appears in the screen", () => {
         //Isolar teste, para ser limitado apenas ao front.
-        cy.intercept("POST", `${BASE_URL}api/todos`, (request) => {
+        cy.intercept("POST", `${BASE_URL}/api/todos`, (request) => {
             request.reply({
                 statusCode: 201,
                 body: {
