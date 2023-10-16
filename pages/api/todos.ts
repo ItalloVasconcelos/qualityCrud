@@ -4,12 +4,12 @@ export default async function handler(
     request: NextApiRequest,
     response: NextApiResponse
 ) {
-    if (request.method == "GET") {
+    if (request.method === "GET") {
         await todoController.get(request, response);
         return;
     }
 
-    if (request.method == "POST") {
+    if (request.method === "POST") {
         await todoController.create(request, response);
         return;
     }

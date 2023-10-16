@@ -1,15 +1,6 @@
 import { HttpNotFoundError } from "@server/infra/errors";
 import { Todo, TodoSchema } from "@server/schema/todo";
-// Supabase config
-// ========================
-// TODO: Ajustar configuração
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.SUPABASE_URL || "";
-const supabaseKey = process.env.SUPABASE_SECRET_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-///// ==========
+import { supabase } from "@server/infra/db/supabase";
 
 type todoRepositoryGetParams = {
     page?: number;

@@ -7,6 +7,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     const query = req.query;
     const page = Number(query.page);
     const limit = Number(query.limit);
+
     if (query.page && isNaN(page)) {
         res.status(400).json({
             error: {
@@ -23,17 +24,18 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         });
         return;
     }
+
     const output = await todoRepository.get({
         page,
         limit,
     });
+
     res.status(200).json({
-        total: (await output).todos,
-        pages: (await output).pages,
-        todos: (await output).todos,
+        total: await output.total,
+        pages: await output.pages,
+        todos: await output.todos,
     });
 }
-
 const todoCreateBodySchema = schema.object({
     content: schema.string(),
 });
@@ -93,10 +95,9 @@ async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
         }
     }
 }
-
 async function deleteById(req: NextApiRequest, res: NextApiResponse) {
     const querySchema = schema.object({
-        id: schema.string().uuid().nonempty(),
+        id: schema.string().uuid(),
     });
 
     const parsedQuery = querySchema.safeParse(req.query);
