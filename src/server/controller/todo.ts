@@ -71,7 +71,6 @@ async function create(req: NextApiRequest, res: NextApiResponse) {
 async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
     const todoId = req.query.id;
 
-    // Fail Fast Validation
     if (!todoId || typeof todoId !== "string") {
         res.status(400).json({
             error: {
