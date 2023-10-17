@@ -53,6 +53,13 @@ function homePage() {
                 <form
                     onSubmit={(event) => {
                         event.preventDefault();
+                        if (!newTodoContent) {
+                            alert(
+                                "Você precisa de um conteúdo para criar uma TODO!"
+                            );
+                            return;
+                        }
+
                         todoController.create({
                             content: newTodoContent,
                             onError() {
