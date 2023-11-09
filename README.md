@@ -10,7 +10,7 @@ This is a C.R.U.D of the "CRUD with quality" course, here I show how to write qu
 
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/itallodev)
 
-To see application: ![To do App](https://qualiycrud.vercel.app)
+To see application: [To do App](https://qualiycrud.vercel.app)
 
 
 ## Learnings
